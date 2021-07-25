@@ -23,6 +23,7 @@ local opts = {
 --end
 
 local function move(is_end, direction)
+	-- print('check patterns characters', patterns.characters)
 	local cur_row, cur_col = unpack(vim.api.nvim_win_get_cursor(0))
 	local line_count = vim.api.nvim_buf_line_count(0)
 	local index, increment = 0, 2
@@ -33,8 +34,8 @@ local function move(is_end, direction)
 		local lines = vim.api.nvim_buf_get_lines(0, start_line, end_line, false)
 		for line_index, line in ipairs(lines) do
 			local line_number = start_line + line_index
-            local search_from = (cur_row == line_number) and cur_col + 2 or 1
-            print('check cur_row and line_number', cur_row, line_number)
+			local search_from = (cur_row == line_number) and cur_col + 2 or 1
+			print("check cur_row and line_number", cur_row, line_number)
 			if not line:match("^%s*$") then
 				for _, pattern in ipairs(opts.patterns) do
 					local start_indice, end_indice, word = line:find(pattern, search_from)
@@ -66,12 +67,12 @@ local function setup(user_opts)
 				'<cmd>lua require("suitcase").move(true)<CR>',
 				{ silent = true, noremap = true }
 			)
-			-- vim.api.nvim_set_keymap(
-			-- mode,
-			-- "E",
-			-- '<cmd>lua require("better-O").insert_new_line()<CR>',
-			-- { silent = true, noremap = true }
-			-- )
+			vim.api.nvim_set_keymap(
+				mode,
+				"E",
+				'<cmd>lua require("suitcase").move(false)<CR>',
+				{ silent = true, noremap = true }
+			)
 			-- vim.api.nvim_set_keymap(
 			-- mode,
 			-- "w",

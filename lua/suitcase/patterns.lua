@@ -24,15 +24,17 @@ local function escape_symbols(...)
 	return unpack(temp)
 end
 
-local space_characters = "^%s*"
-local snake_case = "_"
-local function special_symbols(symbols)
-	return space_characters .. "[" .. escape_symbols(symbols) .. "]"
-end
-local characters = space_characters .. "(%w+)"
+local M = {}
+M.__index = M
 
-return {
-	snake_case = snake_case,
-	characters = characters,
-	special_symbols = special_symbols,
-}
+local space_characters = "^%s*"
+
+M._escaped_symbols = ""
+-- M.snake_case = "_"
+function M.special_symbols(symbols)
+    M._escaped_symbols = escape_symbols(symbols)
+	return space_characters .. "[" .. M._escaped_symbols .. "]"
+end
+M.characters = space_characters .. M._escaped_symbols .. "(%w+)"
+
+return setmetatable({}, M)
